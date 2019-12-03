@@ -55,7 +55,7 @@ class TextCNN:
                                  outputs=output_layer)
 
         self.model.compile(
-            optimizer=keras.optimizers.RMSprop(1e-3),
+            optimizer='adam',
             loss=keras.losses.CategoricalCrossentropy()
         )
         self.model.summary()
@@ -67,9 +67,15 @@ class TextCNN:
         one_hot_targets = np.eye(self.num_classes)[training_labels]
         num_sample = len(training_labels)
         self.model.fit(training_data.reshape(training_data.shape + (1,)),
-                       one_hot_targets.reshape((num_sample, 1, 1, self.num_classes)))
+                       one_hot_targets.reshape((num_sample, 1, 1, self.num_classes)),
+                       epochs=5)
 
+    def eval(self, test_data, test_labels):
 
+        print("Evaluating test set:")
+        print(self.model.evaluate(test_data, test_labels))
 
+    def predict(self, test_data):
 
-
+        print("Prediction results:")
+        print(self.model.predict(test_data))
