@@ -1,6 +1,7 @@
 from tensorflow import keras
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
+import numpy as np
 
 
 # class ConvMaxPooling(layers.Layer):
@@ -22,6 +23,7 @@ class TextCNN:
 
     def __init__(self, filters, filter_sizes, max_words, embedded_length, num_classes):
         self.filters = filters
+        self.num_classes = num_classes
 
         input_layer = keras.Input(shape=(max_words, embedded_length, 1))
 
@@ -52,4 +54,22 @@ class TextCNN:
         self.model = keras.Model(inputs=input_layer,
                                  outputs=output_layer)
 
+        self.model.compile(
+            optimizer=keras.optimizers.RMSprop(1e-3),
+            loss=keras.losses.CategoricalCrossentropy()
+        )
         self.model.summary()
+
+    def train_model(self, training_data, training_labels):
+
+        print("training data shape:")
+        print(training_data.shape)
+        one_hot_targets = np.eye(self.num_classes)[training_labels]
+        num_sample = len(training_labels)
+        self.model.fit(training_data.reshape(training_data.shape + (1,)),
+                       one_hot_targets.reshape((num_sample, 1, 1, self.num_classes)))
+
+
+
+
+
