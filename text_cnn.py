@@ -70,8 +70,9 @@ class TextCNN:
         print(training_data.shape)
         one_hot_targets = np.eye(self.num_classes)[training_labels]
         self.model.fit(training_data.reshape(training_data.shape + (1,)),
-                       one_hot_targets.reshape((len(training_labels), 1, 1, self.num_classes)),
-                       epochs=5)
+                       one_hot_targets.reshape(
+                           (len(training_labels), 1, 1, self.num_classes)),
+                       epochs=3)
 
     def eval(self, test_data, test_labels):
 
