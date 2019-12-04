@@ -30,9 +30,9 @@ def read_data_from_csv(path):
     return np.array(res)
 
 
-pos_data_train = read_data_from_csv("./training_training_data_pos.csv")
+pos_data_train = read_data_from_csv("./training_data_pos.csv")
 pos_data_test = read_data_from_csv("./testing_data_pos.csv")
-neg_data_train = read_data_from_csv("./training_training_data_neg.csv")
+neg_data_train = read_data_from_csv("./training_data_neg.csv")
 neg_data_test = read_data_from_csv("./testing_data_neg.csv")
 print(pos_data_test)
 
@@ -51,5 +51,5 @@ test_label = np.concatenate((pos_labels_test, neg_labels_test))
 
 model.train(train_data, train_label, test_data, test_label)
 model.plot_accuracy()
-model.eval(test_data, test_label)
-model.predict(test_data)
+# model.eval(test_data, test_label)
+# model.predict(test_data)

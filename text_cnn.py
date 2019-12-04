@@ -79,7 +79,7 @@ class TextCNN:
         test_labels_tensor = np.eye(self.num_classes)[test_labels] \
             .reshape((len(test_labels), 1, 1, self.num_classes))
 
-        self.history = self.model.fit(training_tensor, training_labels_tensor, epochs=5, batch_size=128,
+        self.history = self.model.fit(training_tensor, training_labels_tensor, epochs=5, batch_size=4000,
                                       validation_data=(test_tensor, test_labels_tensor))
 
     def eval(self, test_data, test_labels):
