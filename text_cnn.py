@@ -83,4 +83,4 @@ class TextCNN:
     def predict(self, test_data):
 
         print("Prediction results:")
-        print(self.model.predict(test_data))
+        print(self.model.predict(test_data.reshape(test_data.shape + (1,))))
