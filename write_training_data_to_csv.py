@@ -1,8 +1,8 @@
 from main import get_data
 import csv
 import numpy as np
-pos_path = "./review_polarity/txt_sentoken/pos/cv000_29590.txt"
-neg_path = "./review_polarity/txt_sentoken/neg/cv000_29416.txt"
+pos_path = "./review_polarity/txt_sentoken/pos/*.txt"
+neg_path = "./review_polarity/txt_sentoken/neg/*.txt"
 pos_data_train, pos_data_test = get_data(pos_path)
 neg_data_train, neg_data_test = get_data(neg_path)
 print("shape of pos data train")

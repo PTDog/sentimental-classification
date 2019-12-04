@@ -2,6 +2,7 @@ from tensorflow import keras
 import tensorflow.keras.layers as layers
 import tensorflow.keras.models as models
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # class ConvMaxPooling(layers.Layer):
@@ -24,6 +25,7 @@ class TextCNN:
     def __init__(self, filters, filter_sizes, max_words, embedded_length, num_classes):
         self.filters = filters
         self.num_classes = num_classes
+        self.history = None
 
         input_layer = keras.Input(shape=(max_words, embedded_length, 1))
 
@@ -64,15 +66,21 @@ class TextCNN:
         )
         self.model.summary()
 
-    def train_model(self, training_data, training_labels):
+    def train(self, training_data, training_labels, test_data, test_labels):
 
         print("training data shape:")
         print(training_data.shape)
-        one_hot_targets = np.eye(self.num_classes)[training_labels]
-        self.model.fit(training_data.reshape(training_data.shape + (1,)),
-                       one_hot_targets.reshape(
-                           (len(training_labels), 1, 1, self.num_classes)),
-                       epochs=3, batch_size=128)
+
+        training_tensor = training_data.reshape(training_data.shape + (1,))
+        test_tensor = test_data.reshape(test_data.shape + (1,))
+
+        training_labels_tensor = np.eye(self.num_classes)[training_labels]\
+            .reshape((len(training_labels), 1, 1, self.num_classes))
+        test_labels_tensor = np.eye(self.num_classes)[test_labels] \
+            .reshape((len(test_labels), 1, 1, self.num_classes))
+
+        self.history = self.model.fit(training_tensor, training_labels_tensor, epochs=5,
+                                      validation_data=(test_tensor, test_labels_tensor))
 
     def eval(self, test_data, test_labels):
 
@@ -85,3 +93,15 @@ class TextCNN:
 
         print("Prediction results:")
         print(self.model.predict(test_data.reshape(test_data.shape + (1,))))
+
+    def plot_accuracy(self):
+
+        history = self.history
+        plt.figure()
+        plt.plot(history.history['accuracy'], label='accuracy')
+        plt.plot(history.history['val_accuracy'], label='test_accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.ylim([0, 1])
+        plt.legend(loc='lower right')
+        plt.show()
