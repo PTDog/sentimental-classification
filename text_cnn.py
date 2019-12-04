@@ -53,8 +53,10 @@ class TextCNN:
 
             concat_layer = max_pooling
 
+        flatten_layer = layers.Flatten()(concat_layer)
+        drop_out = layers.Dropout(0.2)(flatten_layer)
         output_layer = layers.Dense(
-            num_classes, activation='softmax')(concat_layer)
+            num_classes, activation='softmax')(drop_out)
 
         self.model = keras.Model(inputs=input_layer,
                                  outputs=output_layer)
