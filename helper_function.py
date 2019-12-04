@@ -10,7 +10,7 @@ from keras.preprocessing.sequence import pad_sequences
 # read data from files
 
 stoplist = stopwords.words('english')
-word2vec_path = 'GoogleNews-vectors-negative300.bin.gz'
+word2vec_path = '../GoogleNews-vectors-negative300.bin.gz'
 word2vec = models.KeyedVectors.load_word2vec_format(word2vec_path, binary=True)
 
 

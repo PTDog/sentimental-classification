@@ -35,7 +35,8 @@ class TextCNN:
             for words_covered in filter_sizes:
                 conv = layers.Conv2D(filters, (words_covered, embedded_length),
                                      activation='relu')(input_layer)
-                max_pooling = layers.MaxPooling2D(((max_words - words_covered + 1), 1))(conv)
+                max_pooling = layers.MaxPooling2D(
+                    ((max_words - words_covered + 1), 1))(conv)
 
                 concat_layers.append(max_pooling)
 
@@ -45,11 +46,13 @@ class TextCNN:
             words_covered = filter_sizes[0]
             conv = layers.Conv2D(filters, (words_covered, embedded_length),
                                  padding='same', activation='relu')(input_layer)
-            max_pooling = layers.MaxPooling2D(((max_words - words_covered + 1), 1))(conv)
+            max_pooling = layers.MaxPooling2D(
+                ((max_words - words_covered + 1), 1))(conv)
 
             concat_layer = max_pooling
 
-        output_layer = layers.Dense(num_classes, activation='softmax')(concat_layer)
+        output_layer = layers.Dense(
+            num_classes, activation='softmax')(concat_layer)
 
         self.model = keras.Model(inputs=input_layer,
                                  outputs=output_layer)
