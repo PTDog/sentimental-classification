@@ -65,15 +65,17 @@ class TextCNN:
         print("training data shape:")
         print(training_data.shape)
         one_hot_targets = np.eye(self.num_classes)[training_labels]
-        num_sample = len(training_labels)
         self.model.fit(training_data.reshape(training_data.shape + (1,)),
-                       one_hot_targets.reshape((num_sample, 1, 1, self.num_classes)),
-                       epochs=5)
+                       one_hot_targets.reshape((len(training_labels), 1, 1, self.num_classes)),
+                       metrics=['accuracy'], epochs=5)
 
     def eval(self, test_data, test_labels):
 
         print("Evaluating test set:")
-        print(self.model.evaluate(test_data, test_labels))
+        one_hot_targets = np.eye(self.num_classes)[test_labels]
+        print(self.model.evaluate(test_data.reshape(test_data.shape + (1,)),
+                                  one_hot_targets.reshape((len(test_labels), 1, 1, self.num_classes),
+                                                          metrics=['accuracy'])))
 
     def predict(self, test_data):
 
