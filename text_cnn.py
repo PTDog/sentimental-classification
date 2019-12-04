@@ -72,7 +72,7 @@ class TextCNN:
         self.model.fit(training_data.reshape(training_data.shape + (1,)),
                        one_hot_targets.reshape(
                            (len(training_labels), 1, 1, self.num_classes)),
-                       epochs=3)
+                       epochs=3, batch_size=128)
 
     def eval(self, test_data, test_labels):
 
