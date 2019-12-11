@@ -5,21 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# class ConvMaxPooling(layers.Layer):
-#
-#     def __init__(self, filters, max_words, embedded_length, words_covered, **kwargs):
-#         kwargs['name'] = 'cov2D_max_pooling_concat'
-#         super(ConvMaxPooling, self).__init__(**kwargs)
-#
-#         self.conv = layers.Conv2D(filters, (words_covered, embedded_length),
-#                                   padding='same', activation='relu')
-#
-#         self.maxpooling = layers.MaxPooling2D(((max_words - words_covered + 1), 1))
-#
-#     def call(self, inp):
-#         return self.maxpooling(self.conv(inp))
-
-
 class TextCNN:
 
     def __init__(self, filters, filter_sizes, max_words, embedded_length, num_classes):
@@ -76,13 +61,14 @@ class TextCNN:
         training_tensor = training_data.reshape(training_data.shape + (1,))
         test_tensor = test_data.reshape(test_data.shape + (1,))
 
-        training_labels_tensor = np.eye(self.num_classes)[training_labels]\
+        training_labels_tensor = np.eye(self.num_classes)[training_labels] \
             .reshape((len(training_labels), 1, 1, self.num_classes))
         test_labels_tensor = np.eye(self.num_classes)[test_labels] \
             .reshape((len(test_labels), 1, 1, self.num_classes))
 
         self.history = self.model.fit(training_tensor, training_labels_tensor, epochs=5, batch_size=4000,
                                       validation_data=(test_tensor, test_labels_tensor))
+        return self.history
 
     def eval(self, test_data, test_labels):
 
@@ -107,3 +93,45 @@ class TextCNN:
         plt.ylim([0, 1])
         plt.legend(loc='lower right')
         plt.show()
+
+
+class TextNN:
+
+    def __init__(self, max_words, embedded_length, num_classes):
+        self.num_classes = num_classes
+        self.history = None
+
+        model = models.Sequential()
+        model.add(layers.InputLayer(input_shape=(max_words, embedded_length)))
+        model.add(layers.Flatten())
+        model.add(layers.Dense(num_classes, activation='softmax'))
+
+        model.compile(
+            optimizer='adam',
+            loss=keras.losses.CategoricalCrossentropy(),
+            metrics=['accuracy'],
+        )
+        model.summary()
+        self.model = model
+
+    def train(self, training_data, training_labels, test_data, test_labels):
+        print("training data shape:")
+        print(training_data.shape)
+
+        self.history = self.model.fit(training_data, training_labels, epochs=5, batch_size=4000,
+                                      validation_data=(test_data, test_labels))
+        return self.history
+
+
+def plot_accuracy(histories, labels):
+
+    plt.figure()
+    for history, i in histories:
+        label = labels[i]
+        plt.plot(history.history['val_accuracy'], label=label)
+
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.ylim([0, 1])
+    plt.legend(loc='lower right')
+    plt.show()

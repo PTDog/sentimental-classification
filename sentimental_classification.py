@@ -1,4 +1,6 @@
 from text_cnn import TextCNN
+from text_cnn import TextNN
+from text_cnn import plot_accuracy
 # from main import get_data
 
 import numpy as np
@@ -10,6 +12,7 @@ NUM_CLASSES = 2
 
 model = TextCNN(NUM_FILTERS, FILTER_SIZES, MAX_WORD,
                 EMBEDDING_LENGTH, NUM_CLASSES)
+nn = TextNN(MAX_WORD,EMBEDDING_LENGTH, NUM_CLASSES)
 # pos_path = "./review_polarity/txt_sentoken/pos/*.txt"
 # neg_path = "./review_polarity/txt_sentoken/neg/*.txt"
 # pos_data_train, pos_data_test = get_data(pos_path)
@@ -48,8 +51,14 @@ neg_labels_test = np.zeros(len(neg_data_test), dtype=int)
 test_data = np.concatenate((pos_data_test, neg_data_test))
 test_label = np.concatenate((pos_labels_test, neg_labels_test))
 
+histories = []
+labels = ["CNN", "NN"]
+cnn_history = model.train(train_data, train_label, test_data, test_label)
+nn_history = nn.train(train_data, train_label, test_data, test_label)
+histories.append(cnn_history)
+histories.append(nn_history)
 
-model.train(train_data, train_label, test_data, test_label)
-model.plot_accuracy()
-model.eval(test_data, test_label)
-model.predict(test_data)
+plot_accuracy(histories, labels)
+# model.plot_accuracy()
+# model.eval(test_data, test_label)
+# model.predict(test_data)
